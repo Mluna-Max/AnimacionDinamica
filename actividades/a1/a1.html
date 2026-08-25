@@ -5,7 +5,7 @@
    <title>Página 2</title>
    <style>
     body {
-        background-color:white;
+        background-color:rgb(209, 214, 253);
         text-align: center;
     }
     h1{
@@ -16,14 +16,30 @@
         font-variant: small-caps;
     }
     p {
-        color:gray;
+        color:rgb(83, 83, 83);
         font-size: 40px;
     }
     </style>
+<script>
+     function init(){
+     var nombreactor = document.getElementById("bestactor");
+      nombreactor.innerHTML = "Wagner Moura";
+
+      var nombredrama = document.getElementById("bestdrama");
+      nombredrama.innerHTML = "Hamnet";
+
+      var nombrecomedia = document.getElementById("bestcomedy");
+      nombrecomedia.innerHTML = "One Battle After Another";
+
+      var nombreactriz = document.getElementById("bestactress");
+      nombreactriz.innerHTML = "Jessie Buckley";
+      }
+      window.onload = init; 
+</script>
 
  </head>
  <body>
-     <h1>Golden Globe Winners 2020</h1>
+     <h1>Golden Globe Winners 2026</h1>
  </br>
      <h2>Best Motion Picture - Drama</h2>
      <p id="bestdrama">Name Drama</p>
@@ -38,4 +54,3 @@
      <p id="bestactor">Name Actor</p>
  </body>
 </html>
-
