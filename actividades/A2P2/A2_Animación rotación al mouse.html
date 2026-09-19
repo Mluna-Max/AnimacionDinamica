@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Rotación hacia el mouse</title>
+
+    <style>
+        canvas {
+            border: 2px solid black;
+            background-color: rgb(232, 252, 214);
+        }
+
+        body {
+            text-align: center;
+            color: darkred;
+            background-color: rgb(238, 179, 216);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Mueve la paletita! :3</h2>
+
+    <canvas id="canvas" width="1000" height="700"></canvas>
+
+    <script>
+
+        window.onload = function () {
+
+            // Obtener el canvas y su contexto
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+
+            // Crear la imagen
+            var pelota = new Image();
+            pelota.src = "paleta.png";
+
+            // Posición inicial del mouse
+            var mouse = {
+                x: canvas.width / 2,
+                y: canvas.height / 2
+            };
+
+            // Detectar movimiento del mouse sobre el canvas
+            canvas.addEventListener("mousemove", function(event) {
+
+                var rect = canvas.getBoundingClientRect();
+
+                mouse.x = event.clientX - rect.left;
+                mouse.y = event.clientY - rect.top;
+
+            });
+
+
+            // Esperar a que la imagen termine de cargar
+            pelota.onload = function() {
+
+                // Función de animación
+                function drawFrame() {
+
+                    requestAnimationFrame(drawFrame);
+
+                    // Limpiar canvas
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Posición de la imagen
+                    var x = canvas.width / 2;
+                    var y = canvas.height / 2;
+
+                    // Diferencia entre el mouse y la imagen
+                    var dx = mouse.x - x;
+                    var dy = mouse.y - y;
+
+                    // Calcular el ángulo hacia el mouse
+                    var radianes = Math.atan2(dy, dx);
+
+                    // Guardar estado del canvas
+                    context.save();
+
+                    // Mover el punto de origen al centro de la imagen
+                    context.translate(x, y);
+
+                    // Rotar hacia el mouse
+                    context.rotate(radianes);
+
+                    // Dibujar la imagen centrada
+                    context.drawImage(
+                        pelota,
+                        -pelota.width / 2,
+                        -pelota.height / 2
+                    );
+
+                    // Restaurar el canvas
+                    context.restore();
+                }
+
+                // Iniciar animación
+                drawFrame();
+            };
+
+        };
+
+    </script>
+
+</body>
+</html>
