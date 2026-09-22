@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Alien - Movimiento Senoidal</title>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #2a006e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        canvas {
+            width: 900px;
+            height: 720px;
+            display: block;
+        }
+        
+        h1 {
+        color: rgb(254, 255, 192);
+        text-align: center;
+        margin-bottom: 20px;
+      }
+    </style>
+</head>
+
+<body>
+        
+    <h1>Alien attack!</h1>
+
+<canvas id="canvas" width="900" height="720"></canvas>
+    <script>
+
+        // Canvas
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Imágenes
+        const fondo = new Image();
+        fondo.src = "fondo.png";
+
+        const alien = new Image();
+        alien.src = "alien.png";
+
+        // Posición del alien
+        let x = 0;
+        let y = 360;
+
+        // Velocidad horizontal
+        let dx = 4;
+
+        // Movimiento sinusoidal
+        let tiempo = 0;
+
+        // Tamaño del alien
+        const alienWidth = 225;
+        const alienHeight = 200;
+
+        // Amplitud de la onda
+        const amplitud = 200;
+
+        // Velocidad de la onda
+        const frecuencia = 0.02;
+
+
+        function animar() {
+
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar fondo
+            ctx.drawImage(
+                fondo,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            // Movimiento horizontal
+            x += dx;
+
+            // Si llega al borde derecho
+            if (x + alienWidth >= canvas.width) {
+                x = canvas.width - alienWidth;
+                dx = -dx;
+            }
+
+            // Si llega al borde izquierdo
+            if (x <= 0) {
+                x = 0;
+                dx = -dx;
+            }
+
+            // Movimiento sinusoidal
+            y = 360 + Math.sin(tiempo) * 150;            // Avanzar el tiempo
+            tiempo += frecuencia;
+
+            // Dibujar alien
+            ctx.drawImage(
+                alien,
+                x,
+                y,
+                alienWidth,
+                alienHeight
+            );
+
+            // Repetir animación
+            requestAnimationFrame(animar);
+        }
+
+
+        // Esperar a que las imágenes carguen
+        let imagenesCargadas = 0;
+
+        fondo.onload = iniciar;
+        alien.onload = iniciar;
+
+        function iniciar() {
+
+            imagenesCargadas++;
+
+            if (imagenesCargadas === 2) {
+                animar();
+            }
+        }
+
+    </script>
+
+</body>
+</html>
