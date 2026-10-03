@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>API - Galería de figuras</title>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #8650db;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: rgb(254, 255, 192);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            background-color: #eee8ff;
+            border: 3px solid rgb(254, 255, 192);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Galería de figuras</h1>
+
+    <canvas id="galeria" width="900" height="720"></canvas>
+
+    <script>
+
+    const canvas = document.getElementById("galeria");
+    const ctx = canvas.getContext("2d");
+
+
+    // ==================================================
+    // CASA - ZONA SUPERIOR IZQUIERDA
+    // ==================================================
+
+    // Cuerpo
+    ctx.beginPath();
+    ctx.moveTo(80, 180);
+    ctx.lineTo(280, 180);
+    ctx.lineTo(280, 280);
+    ctx.lineTo(80, 280);
+    ctx.closePath();
+
+    ctx.fillStyle = "#f2a4d8";
+    ctx.fill();
+    ctx.stroke();
+
+
+    // Techo
+    ctx.beginPath();
+    ctx.moveTo(80, 180);
+    ctx.lineTo(180, 100);
+    ctx.lineTo(280, 180);
+    ctx.closePath();
+
+    ctx.fillStyle = "#30a496";
+    ctx.fill();
+    ctx.stroke();
+
+
+    // Puerta
+    ctx.beginPath();
+    ctx.moveTo(160, 280);
+    ctx.lineTo(160, 230);
+    ctx.lineTo(200, 230);
+    ctx.lineTo(200, 280);
+    ctx.closePath();
+
+    ctx.fillStyle = "#d68995";
+    ctx.fill();
+    ctx.stroke();
+
+
+    // Ventana
+    ctx.beginPath();
+    ctx.moveTo(110, 210);
+    ctx.quadraticCurveTo(130, 190, 150, 210);
+    ctx.lineTo(150, 240);
+    ctx.quadraticCurveTo(130, 260, 110, 240);
+    ctx.closePath();
+
+    ctx.fillStyle = "#f2ffe9";
+    ctx.fill();
+    ctx.stroke();
+
+
+ // ==================================================
+// HONGO - ZONA SUPERIOR DERECHA
+// ==================================================
+
+// TALLO DEL HONGO
+ctx.beginPath();
+
+ctx.moveTo(620, 280);
+ctx.lineTo(625, 205);
+
+ctx.quadraticCurveTo(650, 198, 675, 205);
+
+ctx.lineTo(680, 280);
+
+ctx.closePath();
+
+ctx.fillStyle = "#f2ffe9";
+ctx.fill();
+ctx.stroke();
+
+
+// SOMBRERO DEL HONGO
+ctx.beginPath();
+
+ctx.moveTo(575, 205);
+
+// Curva izquierda
+ctx.quadraticCurveTo(575, 135, 635, 125);
+
+// Parte superior
+ctx.quadraticCurveTo(695, 115, 725, 165);
+
+// Curva derecha
+ctx.quadraticCurveTo(740, 190, 725, 205);
+
+// Base del sombrero
+ctx.lineTo(575, 205);
+
+ctx.closePath();
+
+ctx.fillStyle = "#e36d9b";
+ctx.fill();
+ctx.stroke();
+
+
+// MANCHAS DEL HONGO
+
+ctx.beginPath();
+ctx.arc(610, 165, 10, 0, Math.PI * 2);
+ctx.fillStyle = "#f2ffe9";
+ctx.fill();
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(660, 145, 8, 0, Math.PI * 2);
+ctx.fill();
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(700, 175, 11, 0, Math.PI * 2);
+ctx.fill();
+ctx.stroke();
+
+    // ==================================================
+    // AUTO - ZONA INFERIOR IZQUIERDA
+    // ==================================================
+
+    // Cuerpo
+    ctx.beginPath();
+    ctx.moveTo(80, 520);
+    ctx.lineTo(130, 520);
+    ctx.lineTo(160, 470);
+    ctx.lineTo(280, 470);
+    ctx.lineTo(320, 520);
+    ctx.lineTo(350, 520);
+    ctx.lineTo(350, 570);
+    ctx.lineTo(80, 570);
+    ctx.closePath();
+
+    ctx.fillStyle = "#e36d9b";
+    ctx.fill();
+    ctx.stroke();
+
+
+    // Ventana del auto
+    ctx.beginPath();
+    ctx.moveTo(170, 470);
+    ctx.lineTo(190, 440);
+    ctx.lineTo(240, 440);
+    ctx.lineTo(270, 470);
+    ctx.closePath();
+
+    ctx.fillStyle = "#9ed8e0";
+    ctx.fill();
+    ctx.stroke();
+
+
+    // Rueda izquierda
+    ctx.beginPath();
+    ctx.arc(140, 570, 25, 0, Math.PI * 2);
+    ctx.fillStyle = "#222222";
+    ctx.fill();
+    ctx.stroke();
+
+
+    // Rueda derecha
+    ctx.beginPath();
+    ctx.arc(290, 570, 25, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+
+    // ==================================================
+// ESTRELLA - ZONA INFERIOR DERECHA
+// ==================================================
+
+ctx.beginPath();
+
+ctx.moveTo(650, 420); // punta superior
+
+ctx.lineTo(670, 475);
+ctx.lineTo(730, 475);
+
+ctx.lineTo(682, 510);
+ctx.lineTo(700, 570);
+
+ctx.lineTo(650, 535);
+
+ctx.lineTo(600, 570);
+ctx.lineTo(618, 510);
+
+ctx.lineTo(570, 475);
+ctx.lineTo(630, 475);
+
+ctx.closePath();
+
+ctx.fillStyle = "#f7d84a";
+ctx.fill();
+ctx.stroke();
+
+// ==================================================
+// LUNA - ZONA SUPERIOR CENTRAL
+// ==================================================
+
+ctx.beginPath();
+ctx.arc(430, 130, 60, 0, Math.PI * 2);
+
+ctx.fillStyle = "#f7d84a";
+ctx.fill();
+ctx.stroke();
+
+
+// Círculo que recorta la luna
+ctx.beginPath();
+ctx.arc(455, 110, 60, 0, Math.PI * 2);
+
+ctx.fillStyle = "#eee8ff";
+ctx.fill();
+
+    </script>
+
+</body>
+</html>
