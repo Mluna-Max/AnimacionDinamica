@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Paint</title>
+
+    <style>
+
+    body {
+    margin: 0;
+    padding: 20px;
+
+    background-image: url("fondo.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    font-family: Verdana, sans-serif;
+    text-align: center;
+    }
+
+        h1 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        /* Barra de herramientas */
+        .herramientas {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: 2px solid black;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            min-width: 90px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* Colores */
+        .rojo {
+            background-color: red;
+            color: white;
+        }
+
+       .verde-claro {
+            background-color: #90EE90;
+            color: black;
+        }
+
+        .lila {
+            background-color: #C8A2C8;
+            color: black;
+        }   
+
+        .azul {
+            background-color: blue;
+            color: white;
+        }
+
+        .negro {
+            background-color: black;
+            color: white;
+        }
+
+        .amarillo {
+            background-color: yellow;
+            color: black;
+        }
+        /* Botones de grosor */
+        .grosor {
+            background-color: white;
+            color: black;
+            min-width: 65px;
+        }
+
+        .borrar {
+            background-color: black;
+            color: white;
+            min-width: 150px;
+        }
+
+        /* Lienzo de dibujo */
+        canvas {
+            display: block;
+            width: min(900px, 95%);
+            height: auto;
+            aspect-ratio: 3 / 2;
+            margin: 0 auto;
+            background-color: white;
+            border: 2px solid #dddddd;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        #estado {
+            color: #173a20;
+            font-weight: bold;
+            margin: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Mi Paint</h1>
+
+    <div class="herramientas">
+
+        <!-- Botones de colores -->
+        <button class="rojo" data-color="red">Rojo</button>
+        <button class="verde-claro" data-color="#90EE90">Verde claro</button>
+        <button class="azul" data-color="blue">Azul</button>
+        <button class="negro" data-color="black">Negro</button>
+        <button class="amarillo" data-color="yellow">Amarillo</button>
+        <button class="lila" data-color="#C8A2C8">Lila</button>
+    </div>
+
+    <div class="herramientas">
+
+        <!-- Botones de grosor -->
+        <button class="grosor" data-grosor="2">Fino</button>
+        <button class="grosor" data-grosor="6">Mediano</button>
+        <button class="grosor" data-grosor="12">Grueso</button>
+
+        <!-- Botón para borrar -->
+        <button class="borrar" id="borrar">Borrar todo</button>
+
+    </div>
+
+    <p id="estado">Color: Rojo | Grosor: Fino</p>
+
+    <canvas id="lienzo" width="900" height="600"></canvas>
+
+    <script>
+        // Obtener el lienzo y su contexto
+        const lienzo = document.getElementById("lienzo");
+        const ctx = lienzo.getContext("2d");
+
+        // Valores iniciales
+        let color = "red";
+        let grosor = 2;
+        let dibujando = false;
+
+        // Configuración inicial del pincel
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        // Mostrar el estado actual
+        function actualizarEstado() {
+            let nombreGrosor = "Fino";
+
+            if (grosor === 6) {
+                nombreGrosor = "Mediano";
+            } else if (grosor === 12) {
+                nombreGrosor = "Grueso";
+            }
+
+            document.getElementById("estado").textContent =
+                "Color: " + color + " | Grosor: " + nombreGrosor;
+        }
+
+        // Seleccionar color
+        document.querySelectorAll("[data-color]").forEach(function(boton) {
+            boton.addEventListener("click", function() {
+                color = boton.dataset.color;
+                actualizarEstado();
+            });
+        });
+
+        // Seleccionar grosor
+        document.querySelectorAll("[data-grosor]").forEach(function(boton) {
+            boton.addEventListener("click", function() {
+                grosor = Number(boton.dataset.grosor);
+                actualizarEstado();
+            });
+        });
+
+        // Obtener la posición del puntero en el lienzo
+        function obtenerPosicion(evento) {
+            const rect = lienzo.getBoundingClientRect();
+
+            return {
+                x: (evento.clientX - rect.left) *
+                    (lienzo.width / rect.width),
+                y: (evento.clientY - rect.top) *
+                    (lienzo.height / rect.height)
+            };
+        }
+
+        // Comenzar a dibujar
+        lienzo.addEventListener("pointerdown", function(evento) {
+            dibujando = true;
+            lienzo.setPointerCapture(evento.pointerId);
+
+            const posicion = obtenerPosicion(evento);
+
+            ctx.beginPath();
+            ctx.moveTo(posicion.x, posicion.y);
+            ctx.lineTo(posicion.x + 0.1, posicion.y + 0.1);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = grosor;
+            ctx.stroke();
+        });
+
+        // Dibujar mientras se mueve el puntero
+        lienzo.addEventListener("pointermove", function(evento) {
+            if (!dibujando) return;
+
+            const posicion = obtenerPosicion(evento);
+
+            ctx.lineTo(posicion.x, posicion.y);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = grosor;
+            ctx.stroke();
+        });
+
+        // Terminar el trazo
+        function terminarDibujo() {
+            dibujando = false;
+            ctx.beginPath();
+        }
+
+        lienzo.addEventListener("pointerup", terminarDibujo);
+        lienzo.addEventListener("pointercancel", terminarDibujo);
+        lienzo.addEventListener("lostpointercapture", terminarDibujo);
+
+        // Borrar todo el contenido
+        document.getElementById("borrar").addEventListener("click", function() {
+            ctx.clearRect(0, 0, lienzo.width, lienzo.height);
+        });
+
+        // Actualizar el indicador inicial
+        actualizarEstado();
+    </script>
+
+</body>
+</html>
