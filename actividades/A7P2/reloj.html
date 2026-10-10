@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>A7 - Simulación de reloj</title>
+
+  <style>
+    body {
+      background-color: #90edd3;
+      text-align: center;
+      font-family: Verdana, sans-serif;
+    }
+
+    canvas {
+      background-color: #90edd3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Simulación de reloj</h1>
+
+  <canvas id="canvas" width="600" height="600"></canvas>
+
+  <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+
+          vr1 = 0.005, // Horas
+          vr2 = 0.06,  // Minutos
+          vr3 = 3.6,   // Segundos
+
+          radianes1 = 0,
+          radianes2 = 0,
+          radianes3 = 0;
+
+      var cara = new Image();
+      cara.src = "relojBase.png";
+
+      var horas = new Image();
+      horas.src = "horas.png";
+
+      var minutos = new Image();
+      minutos.src = "minutos.png";
+
+      var segundos = new Image();
+      segundos.src = "segundos.png";
+
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame);
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Dibujar la carátula
+        if (cara.complete && cara.naturalWidth) {
+          context.drawImage(cara, 0, 0);
+        }
+
+        // Actualizar las velocidades de rotación
+        radianes1 += vr1 * Math.PI / 180;
+        radianes2 += vr2 * Math.PI / 180;
+        radianes3 += vr3 * Math.PI / 180;
+
+        // Manecilla de horas
+        context.save();
+        context.translate(300, 300);
+        context.rotate(radianes1);
+        if (horas.complete && horas.naturalWidth) {
+          context.drawImage(horas, -horas.width/2, -horas.height/2);
+        }
+        context.restore();
+
+        // Manecilla de minutos
+        context.save();
+        context.translate(300, 300);
+        context.rotate(radianes2);
+        if (minutos.complete && minutos.naturalWidth) {
+          context.drawImage(minutos, -minutos.width/2, -minutos.height/2);
+        }
+        context.restore();
+
+        // Manecilla de segundos
+        context.save();
+        context.translate(300, 300);
+        context.rotate(radianes3);
+        if (segundos.complete && segundos.naturalWidth) {
+          context.drawImage(segundos, -segundos.width/2, -segundos.height/2);
+        }
+        context.restore();
+
+        // Círculo central
+        context.beginPath();
+        context.arc(300, 300, 11, 0, Math.PI * 2);
+        context.fillStyle = "#1d1d1b";
+        context.fill();
+
+      }());
+    };
+  </script>
+
+</body>
+</html>
