@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nave espacial - Fricción y límites</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #120e3f;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: #c8b6ff;
+    }
+
+    canvas {
+      background-color: #0a0a36;
+      border: 2px solid #a78bfa;
+      border-radius: 8px;
+      max-width: 90vw;
+      height: auto;
+    }
+
+    p {
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background-color: #a78bfa;
+      color: #17152b;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>La nave espacial de Minimoon</h1>
+
+  <canvas id="canvas" width="600" height="600"></canvas>
+
+  <p>
+    ← → Girar la nave<br>
+    ↑ Acelerar<br>
+    Disfruta de la nave y su velocidad.
+    Maneja con cuidado! :3
+  </p>
+
+  <button id="reset">Reiniciar nave</button>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+
+    // Cargar la imagen de la nave
+    const image = new Image();
+    image.src = "navecita.png";
+    // Cargar la imagen de fondo
+    const background = new Image();
+    background.src = "fondo.png";
+
+    // Propiedades de la nave
+    const ship = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      width: 55,
+      height: 55,
+      rotation: -Math.PI / 2
+    };
+
+    // Variables de movimiento
+    let vx = 0;
+    let vy = 0;
+    let rotationSpeed = 0;
+    let thrust = 0;
+
+    // Parámetros de física
+    const friction = 0.97;
+    const acceleration = 0.12;
+    const turnSpeed = 0.05;
+
+    // Registrar las teclas presionadas
+    const keys = {};
+
+    window.addEventListener("keydown", function(event) {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp"].includes(event.key)) {
+        event.preventDefault();
+      }
+
+      keys[event.key] = true;
+    });
+
+    window.addEventListener("keyup", function(event) {
+      keys[event.key] = false;
+    });
+
+    // Evitar que una tecla quede activa al cambiar de ventana
+    window.addEventListener("blur", function() {
+      for (const key in keys) {
+        keys[key] = false;
+      }
+    });
+
+    // Reiniciar la posición y velocidad
+    document.getElementById("reset").addEventListener("click", function() {
+      ship.x = canvas.width / 2;
+      ship.y = canvas.height / 2;
+      ship.rotation = -Math.PI / 2;
+      vx = 0;
+      vy = 0;
+    });
+
+    function drawShip() {
+      context.save();
+
+      // Mover el origen al centro de la nave
+      context.translate(ship.x, ship.y);
+
+      // Girar la nave
+      context.rotate(ship.rotation);
+
+      if (image.complete && image.naturalWidth > 0) {
+        context.drawImage(
+          image,
+          -ship.width / 2,
+          -ship.height / 2,
+          ship.width,
+          ship.height
+        );
+      }
+
+      context.restore();
+    }
+
+    function update() {
+      // Rotación
+      if (keys["ArrowLeft"]) {
+        ship.rotation -= turnSpeed;
+      }
+
+      if (keys["ArrowRight"]) {
+        ship.rotation += turnSpeed;
+      }
+
+      // Propulsión en la dirección de la nave
+      if (keys["ArrowUp"]) {
+        const angle = ship.rotation;
+
+        vx += Math.cos(angle) * acceleration;
+        vy += Math.sin(angle) * acceleration;
+      }
+
+      // FRICCIÓN: reducir gradualmente la velocidad
+      vx *= friction;
+      vy *= friction;
+
+      // Actualizar posición
+      ship.x += vx;
+      ship.y += vy;
+
+      // LÍMITES HORIZONTALES
+      const halfW = ship.width / 2;
+      const halfH = ship.height / 2;
+
+      if (ship.x < halfW) {
+        ship.x = halfW;
+        vx = 0;
+      }
+
+      if (ship.x > canvas.width - halfW) {
+        ship.x = canvas.width - halfW;
+        vx = 0;
+      }
+
+      // LÍMITES VERTICALES
+      if (ship.y < halfH) {
+        ship.y = halfH;
+        vy = 0;
+      }
+
+      if (ship.y > canvas.height - halfH) {
+        ship.y = canvas.height - halfH;
+        vy = 0;
+      }
+    }
+
+    function animate() {
+    // Limpiar el canvas
+     context.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Dibujar el fondo ocupando todo el canvas
+     if (background.complete && background.naturalWidth > 0) {
+        context.drawImage(
+         background,
+         0,
+        0,
+        canvas.width,
+        canvas.height
+        );
+     }
+
+  // Actualizar y dibujar la nave encima del fondo
+  update();
+  drawShip();
+
+  requestAnimationFrame(animate);
+}
+
+    // Iniciar la animación cuando la imagen esté lista
+    image.onload = function() {
+      animate();
+    };
+
+    image.onerror = function() {
+      console.error(
+        "No se pudo cargar navecita.png. Revisa el nombre y la ubicación."
+      );
+    };
+  </script>
+</body>
+</html>
